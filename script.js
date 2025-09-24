@@ -208,7 +208,7 @@ function updateNoResultsMessage(searchTerm) {
         noResultsDiv.innerHTML = `
             <div style="text-align: center; padding: 3rem; color: #6b7280;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-                <h3>No events found</h3>
+                <h3 style="color: #6b7280;">No events found</h3>
                 <p>Try adjusting your search or filters</p>
             </div>
         `;
@@ -232,58 +232,6 @@ function handleKeyboardShortcuts(e) {
         searchInput.blur();
     }
 }
-
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes slideIn {
-        from { 
-            opacity: 0; 
-            transform: translateY(20px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
-    
-    @keyframes slideUp {
-        from { 
-            opacity: 0; 
-            transform: translateY(20px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
-    
-    @keyframes slideDown {
-        from { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-        to { 
-            opacity: 0; 
-            transform: translateY(20px); 
-        }
-    }
-    
-    .event-card {
-        transition: all 0.3s ease;
-    }
-    
-    .event-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-    }
-`;
-
-document.head.appendChild(style);
 
 function debounce(func, wait) {
     let timeout;
