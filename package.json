@@ -1,0 +1,25 @@
+{
+  "name": "zeroug",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "live-server --open=./index.html --ignore=**/node_modules/**",
+    "lint:js": "eslint \"**/*.js\"",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:html": "htmlhint \"**/*.html\"",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "globals": "^16.4.0",
+    "htmlhint": "^1.7.1",
+    "live-server": "^1.2.2",
+    "stylelint": "^16.24.0"
+  }
+}

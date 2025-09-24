@@ -1,62 +1,35 @@
-// DOM Elements
 const searchInput = document.getElementById('searchInput');
 const filterTabs = document.querySelectorAll('.tab');
-const categoryButtons = document.querySelectorAll('.category-btn');
 const dayColumns = document.querySelectorAll('.day-column');
 const eventCards = document.querySelectorAll('.event-card');
-const favoriteButtons = document.querySelectorAll('.favorite-btn');
 const shareButtons = document.querySelectorAll('.share-btn');
-const fab = document.querySelector('.fab');
 
-// State Management
 let currentFilter = 'all';
 let currentCategory = 'all';
-let selectedDay = 8; // Monday is selected by default
+let selectedDay = 8;
 
-// Initialize the app
 document.addEventListener('DOMContentLoaded', function () {
     initializeEventListeners();
     updateActiveStates();
 });
 
-// Event Listeners Setup
 function initializeEventListeners() {
-    // Search functionality
     searchInput.addEventListener('input', handleSearch);
-
-    // Filter tabs
     filterTabs.forEach(tab => {
         tab.addEventListener('click', (e) => handleFilterChange(e.target.dataset.filter));
     });
 
-    // Category buttons
-    categoryButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => handleCategoryChange(e.target.textContent));
-    });
-
-    // Day selection
     dayColumns.forEach(column => {
         column.addEventListener('click', (e) => handleDaySelection(e.currentTarget));
     });
 
-    // Favorite buttons
-    favoriteButtons.forEach(btn => {
-        btn.addEventListener('click', handleFavoriteToggle);
-    });
-
-    // Share buttons
     shareButtons.forEach(btn => {
         btn.addEventListener('click', handleShare);
     });
 
-    // Floating Action Button
-    fab.addEventListener('click', handleAddEvent);
-
-    // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyboardShortcuts);
 }
 
-// Search Functionality
 function handleSearch(e) {
     const searchTerm = e.target.value.toLowerCase().trim();
 
@@ -77,30 +50,15 @@ function handleSearch(e) {
         }
     });
 
-    // Show "no results" message if needed
     updateNoResultsMessage(searchTerm);
 }
 
-// Filter Management
 function handleFilterChange(filter) {
     currentFilter = filter;
 
-    // Update active tab
     filterTabs.forEach(tab => tab.classList.remove('active'));
     document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
 
-    // Apply filter logic
-    applyFilters();
-}
-
-function handleCategoryChange(category) {
-    currentCategory = category.toLowerCase();
-
-    // Update active category button
-    categoryButtons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-
-    // Apply filter logic
     applyFilters();
 }
 
@@ -108,7 +66,6 @@ function applyFilters() {
     eventCards.forEach(card => {
         let shouldShow = true;
 
-        // Apply time filter
         if (currentFilter !== 'all') {
             const isPast = card.querySelector('.past-tag');
 
@@ -123,7 +80,6 @@ function applyFilters() {
             }
         }
 
-        // Apply category filter
         if (currentCategory !== 'all categories' && shouldShow) {
             const eventTags = card.querySelectorAll('.tag:not(.past-tag)');
             const categoryMatch = Array.from(eventTags).some(tag =>
@@ -137,7 +93,6 @@ function applyFilters() {
             }
         }
 
-        // Show/hide card with animation
         if (shouldShow) {
             card.style.display = 'flex';
             card.style.animation = 'slideIn 0.3s ease';
@@ -147,40 +102,20 @@ function applyFilters() {
     });
 }
 
-// Day Selection
 function handleDaySelection(columnElement) {
-    // Remove active state from all days
     document.querySelectorAll('.day-number').forEach(day => {
         day.classList.remove('active-day');
     });
 
-    // Add active state to selected day
     const dayNumber = columnElement.querySelector('.day-number');
     dayNumber.classList.add('active-day');
     selectedDay = parseInt(dayNumber.textContent);
 
-    // Simulate loading events for selected day
     showLoadingState();
     setTimeout(() => {
         loadEventsForDay(selectedDay);
         hideLoadingState();
     }, 500);
-}
-
-// Event Interaction Handlers
-function handleFavoriteToggle(e) {
-    e.stopPropagation();
-    const btn = e.target;
-
-    if (btn.textContent === '♡') {
-        btn.textContent = '❤️';
-        btn.style.color = '#ef4444';
-        showToast('Event added to favorites!');
-    } else {
-        btn.textContent = '♡';
-        btn.style.color = '';
-        showToast('Event removed from favorites');
-    }
 }
 
 function handleShare(e) {
@@ -195,7 +130,6 @@ function handleShare(e) {
             url: window.location.href
         });
     } else {
-        // Fallback: copy to clipboard
         const shareText = `${eventTitle} - TechWeek 2025`;
         navigator.clipboard.writeText(shareText).then(() => {
             showToast('Event link copied to clipboard!');
@@ -203,24 +137,12 @@ function handleShare(e) {
     }
 }
 
-function handleAddEvent() {
-    // Simulate opening add event modal
-    showToast('Add Event feature coming soon!');
-    fab.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        fab.style.transform = '';
-    }, 150);
-}
-
-// Utility Functions
 function showToast(message) {
-    // Remove existing toast
     const existingToast = document.querySelector('.toast');
     if (existingToast) {
         existingToast.remove();
     }
 
-    // Create and show new toast
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
@@ -239,7 +161,6 @@ function showToast(message) {
 
     document.body.appendChild(toast);
 
-    // Remove toast after 3 seconds
     setTimeout(() => {
         toast.style.animation = 'slideDown 0.3s ease';
         setTimeout(() => toast.remove(), 300);
@@ -259,17 +180,13 @@ function hideLoadingState() {
 }
 
 function loadEventsForDay(day) {
-    // Simulate loading different events for different days
-    // In a real app, this would make an API call
     console.log(`Loading events for day ${day}`);
-
-    // For demo purposes, just update the event count display
     updateEventCounts();
 }
 
 function updateEventCounts() {
     const eventCounts = document.querySelectorAll('.event-count');
-    eventCounts.forEach((count, index) => {
+    eventCounts.forEach((count) => {
         const randomCount = Math.floor(Math.random() * 8) + 1;
         count.textContent = `${randomCount} events`;
     });
@@ -300,20 +217,15 @@ function updateNoResultsMessage(searchTerm) {
 }
 
 function updateActiveStates() {
-    // Ensure proper initial active states
     document.querySelector('[data-filter="all"]').classList.add('active');
-    document.querySelector('.category-btn').classList.add('active');
 }
 
-// Keyboard Shortcuts
 function handleKeyboardShortcuts(e) {
-    // Ctrl/Cmd + K to focus search
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         searchInput.focus();
     }
 
-    // Escape to clear search
     if (e.key === 'Escape' && document.activeElement === searchInput) {
         searchInput.value = '';
         handleSearch({ target: searchInput });
@@ -321,7 +233,6 @@ function handleKeyboardShortcuts(e) {
     }
 }
 
-// CSS Animations (inject into page)
 const style = document.createElement('style');
 style.textContent = `
     @keyframes fadeIn {
@@ -374,7 +285,6 @@ style.textContent = `
 
 document.head.appendChild(style);
 
-// Performance optimization: Debounce search
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -387,13 +297,6 @@ function debounce(func, wait) {
     };
 }
 
-// Apply debouncing to search
 const debouncedSearch = debounce(handleSearch, 300);
 searchInput.removeEventListener('input', handleSearch);
 searchInput.addEventListener('input', debouncedSearch);
-
-// Initialize app state
-console.log('TechWeek 2025 Event App Initialized');
-console.log('Available keyboard shortcuts:');
-console.log('- Ctrl/Cmd + K: Focus search');
-console.log('- Escape: Clear search (when focused)');
