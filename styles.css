@@ -605,6 +605,22 @@ footer {
   text-align: center;
 }
 
+.logo {
+  width: 60px;
+  height: 60px;
+  background-image: url("logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--space-16);
+}
+
 @media (max-width: 768px) {
   .header-content h1 {
     font-size: var(--font-size-3xl);

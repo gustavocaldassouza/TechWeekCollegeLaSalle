@@ -91,13 +91,20 @@ function getThemeEmoji($theme)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechWeek 2025 - LaSalle College Montreal</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>TechWeek 2025</h1>
-            <p>LaSalle College Montreal</p>
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo" class="logo">
+            </div>
+            <div>
+                <h1>TechWeek 2025</h1>
+                <p>LaSalle College Montreal</p>
+            </div>
         </div>
     </header>
 
