@@ -29,6 +29,8 @@ function fetchTechWeekData()
 $data = fetchTechWeekData();
 $eventDetails = $data['event']['event_detail'] ?? [];
 
+// improve fetched json file to retrieve not only day but also month and year
+// so we can remove the need for the datepicker
 $dayNames = [
     'monday' => ['day' => 'MON', 'num' => '29', 'month' => 'SEP'],
     'tuesday' => ['day' => 'TUE', 'num' => '30', 'month' => 'SEP'],
@@ -53,16 +55,21 @@ function formatTime($time)
 {
     if (empty($time)) return '';
     $time = trim($time);
-    if (preg_match('/(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})/', $time, $matches)) {
-        $startHour = intval($matches[1]);
-        $startMin = $matches[2];
-        return sprintf(
-            '%d:%s %s',
-            $startHour > 12 ? $startHour - 12 : ($startHour == 0 ? 12 : $startHour),
-            $startMin,
-            $startHour >= 12 ? 'PM' : 'AM'
-        );
+
+    $time = str_replace(' ', '', $time);
+    $time = str_replace('-', ' - ', $time);
+
+    if (preg_match('/^(\\d{2}):\\d{2}:(\\d{2})$/', $time, $matches)) {
+        $start = $matches[1];
+        $end = $matches[2];
+
+        // Format the start and end times in the desired pattern
+        $formattedStart = str_pad($start, 4, '0', STR_PAD_LEFT);
+        $formattedEnd = str_pad($end, 4, '0', STR_PAD_LEFT);
+
+        return $formattedStart . ':00-' . $formattedEnd . ':00';
     }
+
     return $time;
 }
 
