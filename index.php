@@ -120,7 +120,6 @@ function getThemeEmoji($theme)
                 </div>
             <?php endforeach; ?>
         </div>
-
         <div class="events-list">
             <?php if ($data && !empty($eventDetails)): ?>
                 <?php foreach ($eventDetails as $dayKey => $dayData): ?>
@@ -155,7 +154,13 @@ function getThemeEmoji($theme)
                                         <?php endif; ?>
 
                                         <?php if (!empty($event['presenter']) && $event['presenter'] !== '========' && $event['presenter'] !== 'Speaker: '): ?>
-                                            <div class="presenter">👤 <?php echo htmlspecialchars($event['presenter']); ?></div>
+                                            <div class="presenter">👤
+                                                <?php if (!empty($event['biography'])): ?>
+                                                    <button class="button-presenter" data-biography="<?php echo htmlspecialchars($event['biography']); ?>">
+                                                        <?php echo htmlspecialchars($event['presenter']); ?>
+                                                    </button>
+                                                <?php endif; ?>
+                                            </div>
                                         <?php endif; ?>
 
                                         <?php if (!empty($event['language'])): ?>
@@ -170,6 +175,8 @@ function getThemeEmoji($theme)
                                     </div>
                                 </div>
                             <?php endif; ?>
+
+
                         <?php endforeach; ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -179,6 +186,12 @@ function getThemeEmoji($theme)
                     <p>Please check your internet connection and try again later.</p>
                 </div>
             <?php endif; ?>
+        </div>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModal" class="close-button">&times;</span>
+                <p id="modalContent"></p>
+            </div>
         </div>
     </main>
     <script src="script.js"></script>

@@ -2,6 +2,30 @@ const eventCards = document.querySelectorAll('.event-card');
 const shareButtons = document.querySelectorAll('.share-btn');
 
 document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('myModal');
+    const closeBtn = document.getElementById('closeModal');
+    const btnsPresenter = document.querySelectorAll('.button-presenter');
+
+    btnsPresenter.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const biography = this.dataset.biography;
+            const modalContent = document.getElementById('modalContent');
+            modalContent.textContent = biography;
+            const modal = document.querySelector('.modal');
+            modal.style.display = 'flex';
+        })
+    })
+
+    closeBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
     shareButtons.forEach(btn => {
         btn.addEventListener('click', handleShare);
     });
