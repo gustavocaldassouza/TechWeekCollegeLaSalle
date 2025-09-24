@@ -197,6 +197,9 @@ function getThemeEmoji($theme)
             </div>
         </div>
     </main>
+    <footer>
+        <p>&copy; 2025 Elite Team . All rights reserved.</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 
