@@ -66,6 +66,8 @@ function formatTime($time)
         return date('H:i', strtotime($group . '00')) . ' ';
     }, $groups));
 
+    echo "Oi";
+
     return substr($formatted, 0, -1); // remove trailing space
 }
 
