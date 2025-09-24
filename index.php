@@ -56,21 +56,17 @@ function formatTime($time)
     if (empty($time)) return '';
     $time = trim($time);
 
+    $time = str_replace(':', '', $time);
     $time = str_replace(' ', '', $time);
-    $time = str_replace('-', ' - ', $time);
+    $time = str_replace('-', '', $time);
+    $time = str_pad($time, 8, '0', STR_PAD_LEFT);
 
-    if (preg_match('/^(\\d{2}):\\d{2}:(\\d{2})$/', $time, $matches)) {
-        $start = $matches[1];
-        $end = $matches[2];
+    $groups = str_split($time, 4);
+    $formatted = implode(' - ', array_map(function ($group) {
+        return date('H:i', strtotime($group . '00')) . ' ';
+    }, $groups));
 
-        // Format the start and end times in the desired pattern
-        $formattedStart = str_pad($start, 4, '0', STR_PAD_LEFT);
-        $formattedEnd = str_pad($end, 4, '0', STR_PAD_LEFT);
-
-        return $formattedStart . ':00-' . $formattedEnd . ':00';
-    }
-
-    return $time;
+    return substr($formatted, 0, -1); // remove trailing space
 }
 
 function getThemeEmoji($theme)
