@@ -68,6 +68,7 @@ function formatTime($time)
 
     echo "Oi";
     echo "oi";
+    echo "ola";
 
     return substr($formatted, 0, -1); // remove trailing space
 }
