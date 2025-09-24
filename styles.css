@@ -846,11 +846,9 @@ body {
   font-size: var(--font-size-lg);
 }
 
-/* Filter Tabs */
 .filter-tabs {
   display: flex;
   gap: var(--space-8);
-  margin-bottom: var(--space-24);
   overflow-x: auto;
   padding-bottom: var(--space-8);
 }
@@ -891,6 +889,9 @@ body {
   text-align: center;
   min-width: 80px;
   cursor: pointer;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
@@ -1033,12 +1034,6 @@ body {
   margin-bottom: var(--space-16);
 }
 
-.event-tags {
-  display: flex;
-  gap: var(--space-8);
-  flex-wrap: wrap;
-}
-
 .tag {
   padding: var(--space-4) var(--space-12);
   border-radius: var(--radius-full);
@@ -1150,7 +1145,6 @@ body {
   }
 
   .filter-tabs {
-    margin-bottom: var(--space-20);
     gap: var(--space-6);
   }
 
