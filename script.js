@@ -28,6 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     shareButtons.forEach(btn => {
         btn.addEventListener('click', handleShare);
+        btn.setAttribute('aria-label', 'Share this event');
+        btn.setAttribute('title', 'Share');
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('tabindex', '0');
+        btn.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleShare.call(this, e);
+            }
+        });
     });
     const searchInput = document.getElementById('searchInput');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -190,54 +200,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function handleShare(e) {
+async function handleShare(e) {
     e.stopPropagation();
     const eventCard = e.target.closest('.event-card');
-    const eventTitle = eventCard.querySelector('.event-title').textContent;
+    const eventTitle = eventCard?.querySelector('.event-title')?.textContent || document.title;
+    const pageUrl = window.location.href;
 
-    if (navigator.share) {
-        navigator.share({
-            title: eventTitle,
-            text: 'Check out this TechWeek 2025 event!',
-            url: window.location.href
-        });
-    } else {
-        const shareText = `${eventTitle} - TechWeek 2025`;
-        navigator.clipboard.writeText(shareText).then(() => {
-            showToast('Event link copied to clipboard!');
-        });
+    const shareData = {
+        title: eventTitle,
+        text: 'Check out this TechWeek 2025 event!',
+        url: pageUrl
+    };
+
+    try {
+        if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+            await navigator.share(shareData);
+            return;
+        }
+    } catch (err) {
     }
 }
 
-function showToast(message) {
-    const existingToast = document.querySelector('.toast');
-    if (existingToast) {
-        existingToast.remove();
-    }
-
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 100px;
-        right: 20px;
-        background: #1f2937;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        z-index: 1001;
-        animation: slideUp 0.3s ease;
-    `;
-
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.animation = 'slideDown 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
 
 function updateNoResultsMessage(searchTerm) {
     const existingMessage = document.querySelector('.no-results');
