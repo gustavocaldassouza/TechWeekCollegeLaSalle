@@ -526,17 +526,40 @@ p {
 }
 
 .share-btn {
-  background: none;
-  border: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   font-size: var(--font-size-lg);
   cursor: pointer;
   border-radius: 50%;
   color: var(--color-text-secondary);
-  transition: background-color var(--duration-fast) var(--ease-standard);
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  transition: background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .share-btn:hover {
   background-color: var(--color-secondary);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.share-btn:active {
+  transform: translateY(0);
+}
+
+.share-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .location {
@@ -618,12 +641,16 @@ p {
 }
 
 .modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--space-20);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  max-height: 70vh;
+  overflow: auto;
+  box-shadow: var(--shadow-lg);
 }
 
 .close-button {
@@ -631,6 +658,11 @@ p {
   font-size: 1.5rem;
   cursor: pointer;
   padding-right: var(--space-16);
+  color: var(--color-text-secondary);
+}
+
+.close-button:hover {
+  color: var(--color-text);
 }
 
 footer {
@@ -745,8 +777,8 @@ footer {
   }
 
   .event-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
   }
 
   .event-title {
@@ -755,8 +787,8 @@ footer {
   }
 
   .event-actions {
-    margin-left: 0;
-    margin-top: var(--space-8);
+    margin-left: auto;
+    margin-top: 0;
   }
 
   .event-time {
