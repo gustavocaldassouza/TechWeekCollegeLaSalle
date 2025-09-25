@@ -51,6 +51,63 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    (function selectDefaultDayByDate() {
+        const dayColumns = Array.from(document.querySelectorAll('.day-column'));
+        if (dayColumns.length === 0) return;
+
+        const monthMap = {
+            'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
+            'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11
+        };
+
+        const titleText = (document && document.title) ? document.title : '';
+        const headerText = document.querySelector('.header-content h1')?.textContent || '';
+        const yearMatch = (titleText + ' ' + headerText).match(/\b(20\d{2})\b/);
+        const inferredYear = yearMatch ? parseInt(yearMatch[1], 10) : (new Date()).getFullYear();
+        console.log(inferredYear);
+
+        const parsed = dayColumns.map(col => {
+            const key = col.dataset.day;
+            const dayNumberEl = col.querySelector('.day-number');
+            const monthEl = col.querySelector('.month');
+            if (!dayNumberEl || !monthEl) return null;
+            const dayNum = parseInt(dayNumberEl.textContent.trim(), 10);
+            const monthAbbr = monthEl.textContent.trim().toUpperCase();
+            const monthIdx = monthMap[monthAbbr];
+            if (Number.isNaN(dayNum) || monthIdx === undefined) return null;
+            const date = new Date(inferredYear, monthIdx, dayNum);
+            return { key, date };
+        }).filter(Boolean);
+
+        if (parsed.length === 0) return;
+
+        parsed.sort((a, b) => a.date - b.date);
+
+        var today = new Date();
+        const start = parsed[0];
+        const end = parsed[parsed.length - 1];
+
+        const toYmd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        let targetKey = null;
+
+
+        if (today < start.date) {
+            targetKey = start.key;
+        } else if (today > end.date) {
+            targetKey = end.key;
+        } else {
+            const todayYmd = toYmd(today);
+            const sameDay = parsed.find(p => toYmd(p.date) === todayYmd);
+            targetKey = sameDay ? sameDay.key : start.key;
+        }
+
+        if (targetKey) {
+            applyDayFilter(targetKey);
+            lastActiveDay = targetKey;
+        }
+    })();
+
     if (searchInput) {
         searchInput.addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
