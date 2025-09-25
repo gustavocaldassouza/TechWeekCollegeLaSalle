@@ -117,6 +117,7 @@ function getThemeEmoji($theme)
             <div class="search-bar">
                 <span class="search-icon">🔍</span>
                 <input type="text" placeholder="Search events, locations, categories..." id="searchInput">
+                <button class="cancel-btn" id="cancelBtn" style="display: none;">×</button>
             </div>
         </div>
         <div class="calendar-nav">
