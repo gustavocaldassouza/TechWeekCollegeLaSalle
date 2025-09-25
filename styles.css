@@ -100,6 +100,10 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
     0 4px 6px -2px rgba(0, 0, 0, 0.02);
 
+  --duration-fast: 0.15s;
+  --duration-normal: 0.3s;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
   --container-xl: 1280px;
 }
 
@@ -327,6 +331,40 @@ p {
   transform: translateY(-50%);
   color: var(--color-text-secondary);
   font-size: var(--font-size-lg);
+}
+
+.cancel-btn {
+  position: absolute;
+  right: var(--space-16);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
+  z-index: 10;
+}
+
+.cancel-btn:hover {
+  background: var(--color-secondary-hover);
+  color: var(--color-text);
+  transform: translateY(-50%) translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.cancel-btn:active {
+  background: var(--color-secondary-active);
+  transform: translateY(-50%) translateY(0);
 }
 
 .filter-tabs {
