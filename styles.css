@@ -224,6 +224,8 @@ html {
   background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  /* ensure full-height layout for sticky footer technique */
+  height: 100%;
 }
 
 body {
@@ -233,6 +235,7 @@ body {
   background-color: var(--color-background);
   color: var(--color-text);
   line-height: var(--line-height-normal);
+
 }
 
 *,
@@ -293,6 +296,8 @@ p {
   max-width: var(--container-xl);
   margin: 0 auto;
   padding: var(--space-16) var(--space-16);
+  /* reserve space for fixed footer to avoid overlap */
+  padding-bottom: 80px;
 }
 
 .search-container {
@@ -666,10 +671,13 @@ p {
 }
 
 footer {
+  /* fixed footer at bottom (minimal change) */
+  position: fixed;
   bottom: 0;
-  color: var(--color-white);
   left: 0;
   width: 100%;
+  z-index: 999;
+  color: var(--color-white);
   background-color: var(--color-blue);
   padding: 10px;
   text-align: center;
@@ -698,6 +706,8 @@ footer {
 
   .main-content {
     padding: var(--space-16);
+    /* ensure fixed footer doesn't cover content on tablet/smaller */
+    padding-bottom: 96px;
   }
 
   .event-card {
@@ -735,6 +745,8 @@ footer {
 
   .main-content {
     padding: var(--space-12);
+    /* extra bottom spacing on narrow screens to avoid footer overlap */
+    padding-bottom: 120px;
   }
 
   .search-container {
