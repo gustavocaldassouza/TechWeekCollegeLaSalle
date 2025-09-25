@@ -33,14 +33,36 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelBtn = document.getElementById('cancelBtn');
     const eventCards = document.querySelectorAll('.event-card');
 
+    let lastActiveDay = getActiveDay();
+    let searchWasEmpty = true;
+
+    function getActiveDay() {
+        const active = document.querySelector('.day-number.active-day');
+        return active ? active.closest('.day-column').dataset.day : 'monday';
+    }
+
+    function applyDayFilter(day) {
+        document.querySelectorAll('.day-number').forEach(d => d.classList.remove('active-day'));
+        const target = document.querySelector(`.day-column[data-day="${day}"] .day-number`);
+        if (target) target.classList.add('active-day');
+
+        eventCards.forEach(card => {
+            card.style.display = (day === 'all' || card.dataset.day === day) ? 'flex' : 'none';
+        });
+    }
+
     if (searchInput) {
         searchInput.addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
 
-            // Show/hide cancel button based on search input
             if (searchTerm.length > 0) {
+                if (searchWasEmpty) {
+                    lastActiveDay = getActiveDay();
+                }
+                searchWasEmpty = false;
                 cancelBtn.style.display = 'block';
             } else {
+                searchWasEmpty = true;
                 cancelBtn.style.display = 'none';
             }
 
@@ -62,33 +84,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Cancel button functionality
     if (cancelBtn) {
         cancelBtn.addEventListener('click', function () {
-            // Clear the search input
             searchInput.value = '';
 
-            // Hide the cancel button
             cancelBtn.style.display = 'none';
 
-            // Show all event cards
-            eventCards.forEach(card => {
-                card.style.display = 'flex';
-            });
+            applyDayFilter(lastActiveDay || getActiveDay());
 
-            // Remove any no results message
             const existingMessage = document.querySelector('.no-results');
             if (existingMessage) {
                 existingMessage.remove();
             }
 
-            // Reset to Monday view (first day)
-            document.querySelectorAll('.day-number').forEach(day => {
-                day.classList.remove('active-day');
-            });
-            document.querySelector('.day-column[data-day="monday"] .day-number').classList.add('active-day');
-
-            // Focus back to search input
             searchInput.focus();
         });
     }
@@ -98,9 +106,10 @@ document.addEventListener('DOMContentLoaded', function () {
         column.addEventListener('click', function () {
             const selectedDay = this.dataset.day;
 
-            // Clear search and hide cancel button when switching days
             searchInput.value = '';
             cancelBtn.style.display = 'none';
+            searchWasEmpty = true;
+            lastActiveDay = selectedDay;
 
             document.querySelectorAll('.day-number').forEach(day => {
                 day.classList.remove('active-day');
