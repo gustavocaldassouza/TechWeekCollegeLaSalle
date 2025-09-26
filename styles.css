@@ -645,17 +645,83 @@ p {
   padding-top: var(--space-24);
 }
 
-.modal-content {
+/* New modal card layout */
+.modal-card {
   background-color: var(--color-surface);
   color: var(--color-text);
-  padding: var(--space-20);
-  border-radius: var(--radius-lg);
+  padding: 0; /* inner sections control spacing */
+  border-radius: calc(var(--radius-lg) + 2px);
   border: 1px solid var(--color-card-border);
-  width: 90%;
-  max-width: 500px;
-  max-height: 70vh;
-  overflow: auto;
+  width: 92%;
+  max-width: 720px;
+  max-height: 82vh;
+  overflow: hidden;
   box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  position: relative; /* so absolute children (close button) are positioned relative to the card */
+}
+
+.modal-body-centered{ padding: var(--space-20); display:flex; flex-direction:column; align-items:center; text-align:center; }
+
+.modal-avatar-large-wrap{ display:flex; justify-content:center; width:100%; margin-bottom: var(--space-16); }
+.modal-avatar-large{ width:160px; height:160px; border-radius: 12px; object-fit:cover; box-shadow: var(--shadow-sm); background-color: rgba(0,0,0,0.06); }
+
+.modal-divider{ width: 60%; height: 1px; background: var(--color-card-border-inner); margin: 6px auto 14px auto; }
+
+.modal-about{ width: 100%; max-width: 640px; }
+.modal-section-body{ color: var(--color-text-secondary); font-size: var(--font-size-base); line-height: 1.7; margin-bottom: var(--space-12); text-align:left; }
+
+.modal-actions{ width:100%; display:flex; justify-content:center; }
+
+.modal-body{
+  padding: var(--space-20);
+  overflow: auto;
+}
+
+.modal-sections{ display: flex; flex-direction: column; gap: var(--space-16); }
+.modal-section-title{
+  font-size: var(--font-size-lg);
+  margin: 0 0 var(--space-8) 0;
+  color: var(--color-text);
+}
+.modal-section-body{
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+}
+
+.modal-actions{ margin-top: var(--space-16); display:flex; justify-content:flex-end; }
+.linkedin-btn{
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover));
+  color: var(--color-btn-primary-text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+}
+.linkedin-btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.close-button{
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  background: transparent;
+  border: 0;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+}
+.close-button:hover{ color: var(--color-text); }
+
+/* small screens adjustments */
+@media (max-width: 600px){
+  .modal-card{ max-width: 96%; margin: 0 8px; }
+  .modal-avatar{ width: 64px; height: 64px; }
+  .modal-body{ padding: var(--space-16); }
 }
 
 .close-button {
@@ -716,14 +782,14 @@ footer {
   word-break: normal; 
 }
 
-/* direita: container para alinhar o pill junto ao branding */
+/* right: align date pill with branding */
 .brand-right{
   display: flex;
   align-items: center;
-  /* não usamos margin-inline-start:auto no pill; layout controlado pelo .header-brand */
+  /* don't use margin-inline-start:auto here; .header-brand controls layout */
 }
 
-/* pill de datas */
+/* date pill */
 .tw-dates{
   display: inline-flex;
   align-items: center;
@@ -740,14 +806,14 @@ footer {
   white-space: nowrap;
   max-width: 100%;
   -webkit-font-smoothing:antialiased;
-  /* garante que o elemento tenha foco visível e acessível */
+  /* ensure the element has a visible, accessible focus state */
   transition: background .12s ease, box-shadow .12s ease, transform .06s ease;
 }
 
-/* ocultar versão curta por padrão (desktop/tablet) */
+/* hide short version by default (desktop/tablet) */
 .tw-dates__short{ display: none; }
 
-/* hover e foco — foco visível usando :focus-visible */
+/* hover & focus — use :focus-visible for keyboard focus */
 .tw-dates:hover,
 .tw-dates:focus,
 .tw-dates:focus-visible{
@@ -757,7 +823,7 @@ footer {
   transform: translateY(0);
 }
 
-/* pequenas melhorias de acessibilidade visual: focus ring apenas quando for foco por teclado */
+/* small accessibility tweak: show focus ring only for keyboard focus */
 .tw-dates:focus:not(:focus-visible){
   box-shadow: inset 0 1px 0 rgba(255,255,255,.02); /* mantém aparência quando clicado com mouse */
 }
@@ -774,11 +840,11 @@ footer {
   .tw-dates{ font-size: 15px; padding-block:9px; padding-inline:12px; }
 }
 
-/* Mobile (<=575.98px) — pill quebra para linha de baixo, centraliza e mostra versão curta */
+/* Mobile (<=575.98px) — pill wraps, centers, and shows short version */
 @media (max-width: 575.98px){
   .header-brand{ gap: 8px; }
 
-  /* forçamos a ordem para que o brand-left apareça primeiro e o pill quebre abaixo */
+  /* force order so brand-left appears first and pill wraps below */
   .brand-left{ order: 1; width: 100%; min-width: 0; }
   .brand-right{ order: 2; width: 100%; display:flex; justify-content:center; }
 
@@ -786,24 +852,24 @@ footer {
     font-size: 14px;
     padding-inline: 10px;
     padding-block: 8px;
-    white-space: nowrap; /* mantém o pill compacto; se preferir permitir quebra, remova */
-    max-width: calc(100% - 24px); /* garante margem visual com padding do header */
+    white-space: nowrap; /* keep pill compact; remove to allow wrap */
+    max-width: calc(100% - 24px); /* leave space for header padding */
     box-sizing: border-box;
   }
 
-  /* no mobile, esconder a versão longa e exibir a curta */
+  /* on mobile, hide long version and show short version */
   .tw-dates__full{ display: none; }
   .tw-dates__short{ display: inline; }
 }
 
-/* foco claro para navegadores */
+/* clear focus style for browsers */
 .tw-dates:focus-visible{
   outline: none;
   box-shadow: 0 0 0 4px rgba(11,42,91,.18);
   border-color: rgba(255,255,255,.22);
 }
 
-/* caso o título fique muito longo, permitir quebra controlada (não cortar palavras) */
+/* allow graceful wrapping for long titles */
 .brand-left h1, .brand-left .site-titles {
   word-break: normal;
   overflow-wrap: break-word;
