@@ -105,6 +105,26 @@ function getThemeEmoji($theme)
                 <h1>TechWeek 2025</h1>
                 <p>LaSalle College Montreal</p>
             </div>
+
+            <div class="header-brand">
+                <div class="brand-left">
+                    <!-- ...existing logo + títulos (copiar o conteúdo atual aqui) ... -->
+                    <!-- Exemplo de placeholder (remova/replace pelo seu markup atual): -->
+                    <!-- <img src="assets/elite-logo.png" alt="Elite Team logo" class="site-logo"> -->
+                    <!-- <div class="site-titles"><h1>TechWeek 2025</h1><p class="subtitle">Evento X</p></div> -->
+                </div>
+
+                <div class="brand-right">
+                    <!-- Pill de datas (inglês - versão curta aparece no mobile) -->
+                    <div class="tw-dates"
+                         role="note"
+                         aria-label="TechWeek dates: September 29 to October 5, 2025"
+                         tabindex="0">
+                      <span class="tw-dates__full">Sep 29 – Oct 05, 2025</span>
+                      <span class="tw-dates__short" aria-hidden="true">Sep 29 – Oct 5</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -212,3 +232,117 @@ function getThemeEmoji($theme)
 </body>
 
 </html>
+
+<style>
+/* .header-brand: agrupa branding + pill de datas (flex, wrap) */
+.header-brand{
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* mantém brand-left e pill alinhados em linha */
+  gap: 12px;
+  flex-wrap: wrap; /* permite quebra no mobile */
+  /* largura e alinhamento do grupo ficam a cargo do header pai; 
+     se quiser centralizar/limitar o bloco global, ajuste o container do header. */
+  min-width: 0; /* importante para evitar overflow de filhos com texto longo */
+}
+
+/* esquerda: logo + títulos (preservar markup atual dentro deste bloco) */
+.brand-left{
+  min-width: 0; /* permite que títulos quebrem corretamente */
+  word-break: normal; /* permite quebra suave se o título for muito longo */
+}
+
+/* direita: container para alinhar o pill junto ao branding */
+.brand-right{
+  display: flex;
+  align-items: center;
+  /* não usamos margin-inline-start:auto no pill; layout controlado pelo .header-brand */
+}
+
+/* pill de datas */
+.tw-dates{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 10px;    /* padding vertical */
+  padding-inline: 12px;   /* padding horizontal */
+  border-radius: 8px;
+  background: #0B2A5B;
+  color: #FFF;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+  white-space: nowrap;
+  max-width: 100%;
+  -webkit-font-smoothing:antialiased;
+  /* garante que o elemento tenha foco visível e acessível */
+  transition: background .12s ease, box-shadow .12s ease, transform .06s ease;
+}
+
+/* ocultar versão curta por padrão (desktop/tablet) */
+.tw-dates__short{ display: none; }
+
+/* hover e foco — foco visível usando :focus-visible */
+.tw-dates:hover,
+.tw-dates:focus,
+.tw-dates:focus-visible{
+  background: #0E3A70; /* ligeiro claro ao hover/focus */
+  box-shadow: 0 0 0 3px rgba(11,42,91,.18);
+  outline: none;
+  transform: translateY(0);
+}
+
+/* pequenas melhorias de acessibilidade visual: focus ring apenas quando for foco por teclado */
+.tw-dates:focus:not(:focus-visible){
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02); /* mantém aparência quando clicado com mouse */
+}
+
+/* Tipografia / breakpoints */
+
+/* Desktop (>=992px) */
+@media (min-width: 992px){
+  .tw-dates{ font-size: 16px; padding-block:10px; padding-inline:14px; }
+}
+
+/* Tablet (>=576px && <=991px) */
+@media (min-width: 576px) and (max-width: 991px){
+  .tw-dates{ font-size: 15px; padding-block:9px; padding-inline:12px; }
+}
+
+/* Mobile (<=575.98px) — pill quebra para linha de baixo, centraliza e mostra versão curta */
+@media (max-width: 575.98px){
+  .header-brand{ gap: 8px; }
+
+  /* forçamos a ordem para que o brand-left apareça primeiro e o pill quebre abaixo */
+  .brand-left{ order: 1; width: 100%; min-width: 0; }
+  .brand-right{ order: 2; width: 100%; display:flex; justify-content:center; }
+
+  .tw-dates{
+    font-size: 14px;
+    padding-inline: 10px;
+    padding-block: 8px;
+    white-space: nowrap; /* mantém o pill compacto; se preferir permitir quebra, remova */
+    max-width: calc(100% - 24px); /* garante margem visual com padding do header */
+    box-sizing: border-box;
+  }
+
+  /* no mobile, esconder a versão longa e exibir a curta */
+  .tw-dates__full{ display: none; }
+  .tw-dates__short{ display: inline; }
+}
+
+/* foco claro para navegadores */
+.tw-dates:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(11,42,91,.18);
+  border-color: rgba(255,255,255,.22);
+}
+
+/* caso o título fique muito longo, permitir quebra controlada (não cortar palavras) */
+.brand-left h1, .brand-left .site-titles {
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+</style>
