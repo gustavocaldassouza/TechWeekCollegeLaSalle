@@ -56,21 +56,17 @@ function formatTime($time)
     if (empty($time)) return '';
     $time = trim($time);
 
+    $time = str_replace(':', '', $time);
     $time = str_replace(' ', '', $time);
-    $time = str_replace('-', ' - ', $time);
+    $time = str_replace('-', '', $time);
+    $time = str_pad($time, 8, '0', STR_PAD_LEFT);
 
-    if (preg_match('/^(\\d{2}):\\d{2}:(\\d{2})$/', $time, $matches)) {
-        $start = $matches[1];
-        $end = $matches[2];
+    $groups = str_split($time, 4);
+    $formatted = implode(' - ', array_map(function ($group) {
+        return date('H:i', strtotime($group . '00')) . ' ';
+    }, $groups));
 
-        // Format the start and end times in the desired pattern
-        $formattedStart = str_pad($start, 4, '0', STR_PAD_LEFT);
-        $formattedEnd = str_pad($end, 4, '0', STR_PAD_LEFT);
-
-        return $formattedStart . ':00-' . $formattedEnd . ':00';
-    }
-
-    return $time;
+    return substr($formatted, 0, -1);
 }
 
 function getThemeEmoji($theme)
@@ -95,13 +91,31 @@ function getThemeEmoji($theme)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechWeek 2025 - LaSalle College Montreal</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>TechWeek 2025</h1>
-            <p>LaSalle College Montreal</p>
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo" class="logo">
+            </div>
+            <div>
+                <h1>TechWeek 2025</h1>
+                <p>LaSalle College Montreal</p>
+            </div>
+        </div>
+        <div class="header-brand">
+            <div class="brand-right">
+                <div class="tw-dates"
+                    role="note"
+                    aria-label="TechWeek dates: September 29 to October 5, 2025"
+                    tabindex="0">
+                    <span class="tw-dates__full">Sep 29 – Oct 05, 2025</span>
+                    <span class="tw-dates__short" aria-hidden="true">Sep 29 – Oct 5</span>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -110,6 +124,7 @@ function getThemeEmoji($theme)
             <div class="search-bar">
                 <span class="search-icon">🔍</span>
                 <input type="text" placeholder="Search events, locations, categories..." id="searchInput">
+                <button class="cancel-btn" id="cancelBtn" style="display: none;">×</button>
             </div>
         </div>
         <div class="calendar-nav">
@@ -163,7 +178,11 @@ function getThemeEmoji($theme)
                                         <?php if (!empty($event['presenter']) && $event['presenter'] !== '========' && $event['presenter'] !== 'Speaker: '): ?>
                                             <div class="presenter">👤
                                                 <?php if (!empty($event['biography'])): ?>
-                                                    <button class="button-presenter" data-biography="<?php echo htmlspecialchars($event['biography']); ?>">
+                                                    <button class="button-presenter"
+                                                        data-biography="<?php echo htmlspecialchars($event['biography']); ?>"
+                                                        data-subtitle="<?php echo htmlspecialchars($event['profession'] ?? ''); ?>"
+                                                        data-photo="<?php echo htmlspecialchars($event['photo'] ?? ''); ?>"
+                                                        data-linkedin="<?php echo htmlspecialchars($event['linkedin'] ?? ''); ?>">
                                                         <?php echo htmlspecialchars($event['presenter']); ?>
                                                     </button>
                                                 <?php endif; ?>
@@ -182,8 +201,6 @@ function getThemeEmoji($theme)
                                     </div>
                                 </div>
                             <?php endif; ?>
-
-
                         <?php endforeach; ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -194,13 +211,18 @@ function getThemeEmoji($theme)
                 </div>
             <?php endif; ?>
         </div>
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span id="closeModal" class="close-button">&times;</span>
-                <p id="modalContent"></p>
+        <div id="myModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalSpeakerName">
+            <div class="modal-card" role="document">
+                <div class="modal-content">
+                    <p id="modalContent"></p>
+                </div>
+                <button id="closeModal" class="close-button" aria-label="Close">Close</button>
             </div>
         </div>
     </main>
+    <footer>
+        <p>&copy; 2025 Elite Team . All rights reserved.</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 
