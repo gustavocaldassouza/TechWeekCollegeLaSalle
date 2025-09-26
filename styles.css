@@ -766,8 +766,24 @@ footer {
 .header-content {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   gap: var(--space-16);
+  width: 100%;
+}
+
+.logo-container {
+  flex: 0 0 auto;
+}
+
+.title-container {
+  flex: 1;
+  text-align: center;
+}
+
+.spacer {
+  flex: 0 0 auto;
+  width: 60px;
 }
 
 

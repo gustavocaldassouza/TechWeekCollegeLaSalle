@@ -101,10 +101,11 @@ function getThemeEmoji($theme)
             <div class="logo-container">
                 <img src="logo.png" alt="Logo" class="logo">
             </div>
-            <div>
+            <div class="title-container">
                 <h1>TechWeek 2025</h1>
                 <p>LaSalle College Montreal</p>
             </div>
+            <div class="spacer"></div>
         </div>
         <div class="header-brand">
             <div class="brand-right">
