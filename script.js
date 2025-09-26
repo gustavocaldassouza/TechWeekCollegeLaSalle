@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             const biography = this.dataset.biography;
             const modalContent = document.getElementById('modalContent');
-            modalContent.textContent = biography;
             const modal = document.querySelector('.modal');
+
+            const linkedInRegex = /(https?:\/\/(?:www\.)?linkedin\.com\/[A-Za-z0-9\-\/_?=.#%]*)/gi;
+            const processedBiography = biography.replace(linkedInRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); text-decoration: underline;">$1</a>');
+
+            modalContent.innerHTML = processedBiography;
             modal.style.display = 'flex';
         })
     })

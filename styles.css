@@ -669,6 +669,24 @@ p {
   min-height: 0;
 }
 
+.modal-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  transition: color var(--duration-fast) var(--ease-standard);
+  word-break: break-all;
+}
+
+.modal-content a:hover {
+  color: var(--color-primary-hover);
+  text-decoration: none;
+}
+
+.modal-content a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .close-button {
   background: var(--color-primary);
   border: 1px solid var(--color-primary);
