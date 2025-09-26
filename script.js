@@ -1,6 +1,16 @@
 const eventCards = document.querySelectorAll('.event-card');
 const shareButtons = document.querySelectorAll('.share-btn');
 
+// simple HTML escaper
+function escapeHtml(unsafe) {
+    return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('myModal');
     const closeBtn = document.getElementById('closeModal');
@@ -8,21 +18,79 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnsPresenter.forEach(btn => {
         btn.addEventListener('click', function () {
-            const biography = this.dataset.biography;
-            const modalContent = document.getElementById('modalContent');
-            modalContent.textContent = biography;
+            const biography = this.dataset.biography || '';
+            const providedPhoto = this.dataset.photo || '';
+            const providedLinkedin = this.dataset.linkedin || '';
             const modal = document.querySelector('.modal');
+            const modalContent = document.getElementById('modalContent');
+            const modalSections = document.getElementById('modalSections');
+            const modalLinkedIn = document.getElementById('modalLinkedIn');
+            const modalAvatar = document.getElementById('modalAvatar');
+
+            // Basic cleanup
+            modalContent.textContent = '';
+            if (modalSections) modalSections.innerHTML = '';
+            modalLinkedIn.hidden = true;
+            modalLinkedIn.href = '#';
+            modalAvatar.src = '';
+
+            // Prefer explicit data-linkedin, otherwise try to extract from biography
+            if (providedLinkedin) {
+                modalLinkedIn.href = providedLinkedin;
+                modalLinkedIn.hidden = false;
+            } else {
+                const lnMatch = biography.match(/https?:\/\/(www\.)?linkedin\.com\/[A-Za-z0-9\-\/_?=.#%]*/i);
+                if (lnMatch) {
+                    modalLinkedIn.href = lnMatch[0];
+                    modalLinkedIn.hidden = false;
+                }
+            }
+
+            // Split biography into paragraphs and render the About block
+            const paragraphs = biography.split(/\n\s*\n|<br\s*\/?\>|\r\n\s*\r\n/).map(p => p.trim()).filter(Boolean);
+            let aboutParas = paragraphs.slice();
+            if (aboutParas.length === 0 && biography.trim() !== '') {
+                aboutParas = [biography];
+            }
+
+            const aboutHtml = aboutParas.map(p => `<p class="modal-section-body">${escapeHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
+            modalContent.innerHTML = aboutHtml;
+            modalContent.style.display = 'block';
+            if (modalSections) modalSections.style.display = 'none';
+
+            // Avatar: prefer provided photo, otherwise initials placeholder (larger)
+            if (providedPhoto) {
+                modalAvatar.src = providedPhoto;
+            } else {
+                const initials = (this.textContent || 'S').split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase() || 'S';
+                modalAvatar.src = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='100%' height='100%' fill='%23344656'/><text x='50%' y='55%' font-size='56' font-family='Arial, Helvetica, sans-serif' fill='%23fff' text-anchor='middle' dominant-baseline='middle'>${initials}</text></svg>`)}`;
+            }
+
+            // Show modal
             modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
         })
     })
 
     closeBtn.addEventListener('click', function () {
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
     });
 
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
             modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    // close modal with Escape key
+    window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            if (modal && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            }
         }
     });
 
