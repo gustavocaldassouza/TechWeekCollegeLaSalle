@@ -699,6 +699,117 @@ footer {
   gap: var(--space-16);
 }
 
+
+.header-brand{
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  gap: 12px;
+  flex-wrap: wrap; 
+  
+  min-width: 0; 
+}
+
+
+.brand-left{
+  min-width: 0; 
+  word-break: normal; 
+}
+
+/* direita: container para alinhar o pill junto ao branding */
+.brand-right{
+  display: flex;
+  align-items: center;
+  /* não usamos margin-inline-start:auto no pill; layout controlado pelo .header-brand */
+}
+
+/* pill de datas */
+.tw-dates{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 10px;    /* padding vertical */
+  padding-inline: 12px;   /* padding horizontal */
+  border-radius: 8px;
+  background: #0B2A5B;
+  color: #FFF;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+  white-space: nowrap;
+  max-width: 100%;
+  -webkit-font-smoothing:antialiased;
+  /* garante que o elemento tenha foco visível e acessível */
+  transition: background .12s ease, box-shadow .12s ease, transform .06s ease;
+}
+
+/* ocultar versão curta por padrão (desktop/tablet) */
+.tw-dates__short{ display: none; }
+
+/* hover e foco — foco visível usando :focus-visible */
+.tw-dates:hover,
+.tw-dates:focus,
+.tw-dates:focus-visible{
+  background: #0E3A70; /* ligeiro claro ao hover/focus */
+  box-shadow: 0 0 0 3px rgba(11,42,91,.18);
+  outline: none;
+  transform: translateY(0);
+}
+
+/* pequenas melhorias de acessibilidade visual: focus ring apenas quando for foco por teclado */
+.tw-dates:focus:not(:focus-visible){
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02); /* mantém aparência quando clicado com mouse */
+}
+
+/* Tipografia / breakpoints */
+
+/* Desktop (>=992px) */
+@media (min-width: 992px){
+  .tw-dates{ font-size: 16px; padding-block:10px; padding-inline:14px; }
+}
+
+/* Tablet (>=576px && <=991px) */
+@media (min-width: 576px) and (max-width: 991px){
+  .tw-dates{ font-size: 15px; padding-block:9px; padding-inline:12px; }
+}
+
+/* Mobile (<=575.98px) — pill quebra para linha de baixo, centraliza e mostra versão curta */
+@media (max-width: 575.98px){
+  .header-brand{ gap: 8px; }
+
+  /* forçamos a ordem para que o brand-left apareça primeiro e o pill quebre abaixo */
+  .brand-left{ order: 1; width: 100%; min-width: 0; }
+  .brand-right{ order: 2; width: 100%; display:flex; justify-content:center; }
+
+  .tw-dates{
+    font-size: 14px;
+    padding-inline: 10px;
+    padding-block: 8px;
+    white-space: nowrap; /* mantém o pill compacto; se preferir permitir quebra, remova */
+    max-width: calc(100% - 24px); /* garante margem visual com padding do header */
+    box-sizing: border-box;
+  }
+
+  /* no mobile, esconder a versão longa e exibir a curta */
+  .tw-dates__full{ display: none; }
+  .tw-dates__short{ display: inline; }
+}
+
+/* foco claro para navegadores */
+.tw-dates:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(11,42,91,.18);
+  border-color: rgba(255,255,255,.22);
+}
+
+/* caso o título fique muito longo, permitir quebra controlada (não cortar palavras) */
+.brand-left h1, .brand-left .site-titles {
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 @media (max-width: 768px) {
   .header-content h1 {
     font-size: var(--font-size-3xl);
@@ -810,4 +921,38 @@ footer {
   .close-button {
     padding-right: var(--space-4);
   }
+}
+/* Ultra-narrow phones: <= 400px */
+@media (max-width: 400px) {
+  .tw-dates{
+    font-size: 13px; /* down from 14px */
+    line-height: 1.05; /* tighter lines */
+    padding-block: 6px; /* was 8–10px */
+    padding-inline: 8px; /* was 10–12px */
+    max-width: 240px; /* visual cap so it doesn’t dominate */
+    box-sizing: border-box;
+    /* allow wrap when needed for very narrow screens (keeps pill from overflowing) */
+    white-space: normal;
+    text-align: center;
+  }
+  .tw-dates__short{ display: inline; }
+  .tw-dates__full{ display: none; }
+}
+
+/* Very small phones: <= 360px (common 360×800) */
+@media (max-width: 360px) {
+  .tw-dates{
+    font-size: 12.5px;
+    line-height: 1.05;
+    padding-block: 5px;
+    padding-inline: 7px;
+    border-radius: 7px;
+    max-width: 200px; /* keeps pill smaller than the day-circle area */
+    letter-spacing: 0.1px; /* micro tracking for readability */
+    box-sizing: border-box;
+  }
+  /* center the pill strongly when horizontal space is extra-tight */
+  .brand-right{ justify-content: center; }
+  /* keep medium weight on tiny screens */
+  .tw-dates{ font-weight: 600; }
 }
